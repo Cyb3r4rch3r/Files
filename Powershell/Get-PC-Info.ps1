@@ -127,7 +127,7 @@ function Redo{
 		$redo = Read-Host -Prompt "Would you like to lookup another computer? (Y/N)"
 		if ($redo -eq "Y" -or $redo -eq "y"){
 			do{
-				$compName = Read-Host -Prompt "Enter TCO or SML #"
+				$compName = Read-Host -Prompt "Enter Computer Name"
 				AllFunction}
 			until($redo -eq "N" -or $redo -eq "n")	
 			}
