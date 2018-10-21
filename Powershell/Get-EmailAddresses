@@ -1,0 +1,12 @@
+#This script queries Active Directory to get the email addresses associated with the users in a given list
+
+Write-Host "Important - The file with usernames must be in the same directory as this script!"
+
+$doc = Read-Host -Prompt "Enter the name of the file with users to import (ie, Users.txt)"
+
+$users = Get-Content $doc
+
+foreach ($user in $users){
+	$grpMbr = Get-ADUser -Filter {displayName -like $user} -Properties * | select displayName, emailAddress  >> UserEmails.txt
+	}
+ 
