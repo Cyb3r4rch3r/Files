@@ -1,0 +1,20 @@
+#Import the Active Directory Module for Powershell
+import-module activedirectory
+
+$Machines = Get-ADComputer -LDAPFilter "(name=*)"-SearchBase 
+"DC=contoso,DC=com" 
+foreach ($Machine in $Machines)
+{
+    
+    if(Test-Connection -ComputerName $Machine.Name -Quiet -Count 1)
+    {
+    
+        Invoke-Command -ComputerName $Machine.Name -ScriptBlock {
+		#Changes the setting to Append these DNS Suffixes and adds suffixes
+
+		$suffixes = 'dns1','dns2','dns3' 
+
+		invoke-wmimethod -Class win32_networkadapterconfiguration -Name setDNSSuffixSearchOrder -ComputerName $compName -ArgumentList @($suffixes), $null}
+    }
+
+}
