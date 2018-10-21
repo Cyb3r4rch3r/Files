@@ -1,0 +1,17 @@
+#This was written to expedite the process of removing Node ID's that were duplicated after a client upgraded an in place NetSupport DNA server
+
+$compList = Get-Content DNA-computers.txt
+
+
+    foreach ($computer in $compList)
+
+    {
+	if (test-Connection -Cn $computer -Count 2 -quiet) {
+	write-host "$computer is online. Checking for Registry Entry."
+	REG DELETE "\\$computer\HKLM\SOFTWARE\Wow6432Node\NetSupport Ltd\NetSupport DNA\Client" /v NodeID /f
+	}
+	else
+	{ write-host "$computer is not online."}
+
+    }
+	
