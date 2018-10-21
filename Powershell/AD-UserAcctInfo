@@ -1,0 +1,44 @@
+#Explanation of Script
+Write-Host "This script will display the searched users Name, if they are enabled or disabled, when their account was created, when it was changed, last logon date and last bad password attempt."
+
+#Confirm execution
+$continue = Read-Host -Prompt "Do you wish to conitnue?"
+
+#Lookup the user
+function Lookup {
+	$uName = Read-Host -Prompt "Enter the users name"
+
+	$result = Get-ADUser $uName -Properties * | select Name, Enabled, whenCreated, whenChanged, @{N='lastLogon'; E={[DateTime]::FromFileTime($_.LastLogon)}}, @{N='pwdLastSet'; E={[DateTime]::FromFileTime($_.pwdLastSet)}}, @{N='badPasswordTime'; E={[DateTime]::FromFileTime($_.badPasswordTime)}}, badPwdCount
+
+	Write-Host $result
+	}
+
+#Check to see if answered yes or no
+function CheckAnswer{
+	if ($continue -eq "Y" -Or $continue -eq "y") {
+		Lookup
+		}
+	else {
+		Write-Host "Goodbye!"
+		Exit
+		}
+	}
+
+#Function to call the script again for another user lookup
+function Redo{
+	$redo = Read-Host -Prompt "Would you like to lookup another user? (Y/N)"
+		if ($redo -eq "Y" -or $redo -eq "y"){
+			do{
+			Lookup
+			Redo
+			}
+			until($redo -eq "N" -or $redo -eq "n")
+			}
+		else{
+			Exit
+			}
+		}
+		
+#Function Calls
+CheckAnswer
+Redo
