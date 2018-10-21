@@ -1,0 +1,83 @@
+# Add or remove users in bulk to/from a group
+
+Write-Host "Important - The file with usernames must be in the same directory as this script!"
+
+$doc = Read-Host -Prompt "Enter the name of the file with users to import (ie, Users.txt)"
+
+$users = Get-Content $doc
+
+Write-Host $users
+
+function UserADD {
+$group = Read-Host -Prompt "Enter group to add users to"
+
+
+foreach ($user in $users){
+	$grpMbr = Get-ADUser -Filter {displayName -like $user} -Properties CanonicalName
+	#$grpMbr = Get-ADUser $user
+	Add-ADGroupMember -Identity $group -Members $grpMbr
+	Write-Host "$grpMbr is now a member of $group"
+	}
+} 
+
+function UserRemove {
+$group = Read-Host -Prompt "Enter group to remove users from"
+
+foreach ($user in $users){
+	$grpMbr = Get-ADUser -Filter {displayName -like $user} -Properties CanonicalName
+	#$grpMbr = Get-ADUser $user
+	Remove-ADGroupMember -Identity $group -Members $grpMbr -Confirm:$False -ErrorAction:SilentlyContinue
+	Write-Host "$user removed from $group" 
+	}
+}
+
+#Function to call the script again for another user
+function RedoAdd{
+	$redo = Read-Host -Prompt "Would you like to add users to another group? (Y/N)"
+		if ($redo -eq "Y" -or $redo -eq "y"){
+			do{
+			UserADD
+			RedoAdd
+			}
+			until($redo -eq "N" -or $redo -eq "n")
+			}
+		else{
+			Choose
+			}
+}
+
+function RedoRem{
+	$redo = Read-Host -Prompt "Would you like to remove users from another group? (Y/N)"
+		if ($redo -eq "Y" -or $redo -eq "y"){
+			do{
+			UserRemove
+			RedoRem
+			}
+			until($redo -eq "N" -or $redo -eq "n")
+			}
+		else{
+			Choose
+			}
+}
+		
+function Choose {
+	$choice = Read-Host -Prompt "Do you want to add or remove users? (ADD/REM) Press Q to quit."
+		if ($choice -eq "add" -or $choice -eq "ADD"){
+			UserADD
+			RedoAdd
+			}
+		if ($choice -eq "rem" -or $choice -eq "REM" -or $choice -eq "remove" -or $choice -eq "REMOVE"){
+			UserRemove
+			RedoRem
+			}
+		if ($choice -eq "q" -or $choice -eq "Q"){
+			Write-Host "Exiting..."
+			exit
+			}
+		else{
+			Write-Host "Please make a valid choice or press Q to quit"
+			Choose
+			}
+}
+
+Choose
