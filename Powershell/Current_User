@@ -1,0 +1,5 @@
+Write-Host "Get the currently logged on user from selected PC"
+
+$compName = Read-Host -Prompt "Enter PC Name #: "
+
+Get-WmiObject -Class Win32_ComputerSystem -Property UserName -ComputerName $compName | select UserName
