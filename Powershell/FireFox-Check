@@ -1,0 +1,22 @@
+#Check if FireFox is installed and install it if it isn't. Requires editing the share path to function.
+
+$compName = Read-Host -Prompt "Enter Computer Name"
+Function CheckFFox{
+	Get-Credential
+	$Reg = [Microsoft.Win32.RegistryKey]::OpenRemoteBaseKey('LocalMachine', $compName)
+	$RegKey= $Reg.OpenSubKey("SOFTWARE\Mozilla")
+	$isInstalled= Test-Path $RegKey
+	if ($isInstalled){
+	$True
+	write-host "Firefox is installed"
+	}
+	Else{
+	Get-Credential
+	write-host "Installing Firefox"
+	Invoke-Command -Cn $compName -ScriptBlock {
+		\\<ShareName>\Firefox\Firefox<version>.exe -ms
+		}
+}
+}
+	
+CheckFFox
