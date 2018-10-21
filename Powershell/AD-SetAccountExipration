@@ -1,0 +1,13 @@
+#Get List of Users
+$Names = Get-Content "Names.txt"
+
+#Define Expiration Date
+$expDate = Read-Host -Prompt "Enter the expiration date in MM/DD/YYY format"
+
+#foreach loop
+foreach($Name in $Names){
+
+$user = Get-ADUser -Filter {displayName -like $Name} -Properties CanonicalName
+
+Set-ADAccountExpiration -Identity $user -DateTime $expDate
+}
