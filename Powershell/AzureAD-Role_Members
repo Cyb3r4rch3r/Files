@@ -1,0 +1,8 @@
+# This Script polls AzureAD to audit all users in Admin roles
+# Requires a file with the role ID's you select from Microsoft's Documentation https://docs.microsoft.com/en-us/azure/role-based-access-control/built-in-roles 
+
+$roles = Get-Content "AzureRoleIDs.txt" 
+
+foreach ($role in $roles) {
+	Get-AzureADDirectoryRoleMember -ObjectId $role | Select CompanyName, Department, DisplayName, JobTitle, Mail | Export-CSV "AzureDirectoryRoleMembers.csv" -Append -Force -NoTypeInformation
+	}
