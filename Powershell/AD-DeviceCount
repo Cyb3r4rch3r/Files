@@ -1,0 +1,9 @@
+import-module activedirectory
+
+$ous = Get-ADOrganizationalUnit -Filter * -SearchBase "DC=contoso,DC=com" | Select-Object -ExpandProperty DistinguishedName
+$ous | ForEach-Object{
+    [psobject][ordered]@{
+        OU = $_
+        Count = (Get-ADComputer -Filter * -SearchBase "$_").count
+    }
+}
