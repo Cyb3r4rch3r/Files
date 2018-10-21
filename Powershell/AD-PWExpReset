@@ -1,0 +1,11 @@
+$accts = Read-Host = @('user1', 'user2', 'user3')
+
+#Read in Account Attributes and reset pwdlastset date
+foreach ($acct in $accts) {
+Write-Host "Setting new Password Expiration for $acct"
+$User = Get-ADUser $acct -properties pwdlastset 
+$User.pwdlastset = 0 
+Set-ADUser -Instance $User 
+$user.pwdlastset = -1 
+Set-ADUser -instance $User
+}
