@@ -6,7 +6,7 @@ Funtion Name		Description
 GetInfo				Gathers information about the target device - OS Version, Physical/Logical Disks, Mapped Drives, Current User and Active Remote Sessions
 Winlog				Checks for AutoLogin configuration
 Printers			Checks for all installed printers both system wide and for the current logged in user
-get-localadmins		Gets the full list of local admins on the target device
+get-localadmins	        	Gets the full list of local admins on the target device
 Hotfix				Gets all installed Hotfixes/Patches on the target system
 RSOP				Gets Resultant Set of Policy on the currently logged in user
 Redo				Restarts the script to check all functions against another target
